@@ -1,0 +1,210 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoCrop | Easy Image Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar container">
+            <div class="logo">
+                <span>PhotoCrop</span>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="active" data-view="editor">Editor</a></li>
+                <li><a href="#" data-view="gallery">Galeria</a></li>
+                <li><a href="#" data-view="settings">Definições</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Ferramentas</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active"><a href="#" data-view="editor"><i class="fas fa-crop-alt"></i> Crop</a></li>
+                <li><a href="#" data-view="gallery"><i class="fas fa-images"></i> Galeria</a></li>
+                <li><a href="#" data-view="settings"><i class="fas fa-cog"></i> Definições</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" class="btn btn-sm btn-outline" id="helpBtn"><i class="fas fa-question-circle"></i> Help</a>
+            </div>
+        </aside>
+
+        <section class="main-content">
+            <div class="view-header">
+                <div class="view-title">
+                    <h1>PhotoCrop</h1>
+                    <p>Cortar, editar e salvar suas imagens</p>
+                </div>
+                <div class="view-actions">
+                    <button class="btn btn-primary" id="uploadBtn"><i class="fas fa-upload"></i> Upload Image</button>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-workspace">
+                    <div class="empty-state" id="emptyState">
+                        <img src="hero-illustration.png" alt="Upload an image" style="width: 200px; height: auto;">
+                        <h3>Nenhuma imagem carregada</h3>
+                        <p>Carregue uma imagem para começar a editar</p>
+                        <button class="btn btn-primary" id="emptyStateUploadBtn"><i class="fas fa-upload"></i> Carregar Imagem</button>
+                    </div>
+                    <div class="image-editor" id="imageEditor" style="display: none;">
+                        <div class="image-container" id="imageContainer">
+                            <img id="previewImage" src="" alt="Preview">
+                            <div class="crop-overlay" id="cropOverlay">
+                                <div class="crop-handle top-left"></div>
+                                <div class="crop-handle top-right"></div>
+                                <div class="crop-handle bottom-left"></div>
+                                <div class="crop-handle bottom-right"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="editor-controls" id="editorControls" style="display: none;">
+                    <div class="control-group">
+                        <h3>Configurações de Corte</h3>
+                        <div class="aspect-ratio-controls">
+                            <label>Proporção:</label>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-secondary aspect-ratio-btn" data-ratio="free">Livre</button>
+                                <button class="btn btn-sm btn-secondary aspect-ratio-btn" data-ratio="1:1">1:1</button>
+                                <button class="btn btn-sm btn-secondary aspect-ratio-btn" data-ratio="4:3">4:3</button>
+                                <button class="btn btn-sm btn-secondary aspect-ratio-btn" data-ratio="16:9">16:9</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <h3>Ações</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-undo"></i> Reset</button>
+                            <button class="btn btn-primary" id="cropBtn"><i class="fas fa-crop-alt"></i> Cortar Imagens</button>
+                            <button class="btn btn-success" id="saveBtn"><i class="fas fa-save"></i> Salve na Galeria</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-container" id="galleryContainer" style="display: none;">
+                <div class="gallery-header">
+                    <h3>Sua imagens salvas</h3>
+                    <button class="btn btn-sm btn-danger" id="clearGalleryBtn"><i class="fas fa-trash"></i> Clear Gallery</button>
+                </div>
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Saved images will be displayed here -->
+                </div>
+                <div class="empty-gallery" id="emptyGallery" style="display: none;">
+                    <p>Nenhuma imagem salva ainda. Corte e salve algumas imagens para vê-las aqui.</p>
+                </div>
+            </div>
+
+            <div class="settings-container" id="settingsContainer" style="display: none;">
+                <div class="settings-header">
+                    <h3>Definições</h3>
+                    <p>Personalize sua experiência</p>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h4><i class="fas fa-palette"></i> Aparência</h4>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <label for="themeToggle">Tema</label>
+                                <p>Alternar entre tema claro e escuro</p>
+                            </div>
+                            <div class="theme-toggle">
+                                <button class="btn btn-secondary" id="themeToggle">
+                                    <i class="fas fa-sun" id="themeIcon"></i>
+                                    <span id="themeText">Tema Claro</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Image Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Visualizar</h2>
+                <button class="close-btn" id="closePreviewModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body preview-modal-body">
+                <img id="modalPreviewImage" src="" alt="Preview">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closePreviewBtn">Fechar</button>
+                <a class="btn btn-primary" id="downloadBtn" download="cropped-image.jpg"><i class="fas fa-download"></i> Download</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Como usar o PhotoCrop</h2>
+                <button class="close-btn" id="closeHelpModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3><i class="fas fa-upload"></i> Carregar uma Imagem</h3>
+                    <p>Clique no botão "Carregar Imagem" para selecionar uma imagem do seu dispositivo.</p>
+                </div>
+                <div class="help-section">
+                    <h3><i class="fas fa-crop-alt"></i> Cortar sua Imagem</h3>
+                    <p>Arraste os cantos da sobreposição de corte para selecionar a área que você deseja manter. Você também pode escolher proporções predefinidas.</p>
+                </div>
+                <div class="help-section">
+                    <h3><i class="fas fa-save"></i> Salvar na Galeria</h3>
+                    <p>Depois de cortar, salve sua imagem na galeria. Todas as imagens são armazenadas localmente no seu dispositivo.</p>
+                </div>
+                <div class="help-section">
+                    <h3><i class="fas fa-download"></i> Download</h3>
+                    <p>Você pode baixar qualquer imagem da sua galeria para o seu dispositivo.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeHelpBtn">Entendido!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h2 id="confirmTitle">Confirmar</h2>
+                <button class="close-btn" id="closeConfirmModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Tem certeza que deseja prosseguir?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelConfirmBtn">Cancelar</button>
+                <button class="btn btn-danger" id="confirmBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
